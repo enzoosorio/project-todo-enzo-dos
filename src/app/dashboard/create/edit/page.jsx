@@ -7,5 +7,9 @@ export default async function UpdatePage({ searchParams }) {
   console.log(idSearchParam);
   console.log(result);
 
-  return <FormEdit task={result} />;
+  return (
+    <>
+      <FormEdit task={result} />
+    </>
+  );
 }

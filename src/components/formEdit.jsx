@@ -1,18 +1,7 @@
 "use client";
+import { formatDate } from "@/utils/formatDate";
 
 export const FormEdit = ({ task, idPathname }) => {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-
-    month = month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
-
-    return `${year}-${month}-${day}`;
-  };
-
   const handleFormSubmit = async (e) => {
     try {
       e.preventDefault();
@@ -31,7 +20,7 @@ export const FormEdit = ({ task, idPathname }) => {
       if (res.ok) {
         const finalData = await res.json();
         console.log(finalData);
-        window.location.href = "/";
+        window.location.href = "/dashboard";
       } else {
         console.error("Error updating task:", res.status, res.statusText);
       }

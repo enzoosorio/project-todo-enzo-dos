@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from '@/utils/connectionMongoDB'
 import UserTasks from '@/models/Task'
-
+import { taskSchema } from "@/validations/taskSchema";
 
 export async function GET() {
     connectToDatabase()
@@ -15,14 +15,21 @@ export async function POST(request) {
         connectToDatabase();
         const data = await request.json();
 
+        const resultZodValidation = taskSchema.safeParse(data)
+
+        if (!resultZodValidation.success) {
+            return NextResponse.json(resultZodValidation.error)
+        }
+
+        console.log(resultZodValidation)
+
         const newTask = new UserTasks(data);
 
         const savedTask = await newTask.save();
         console.log("Tarea creada:", savedTask);
 
-        return NextResponse.json({
-            message: "Tarea creada exitosamente"
-        });
+        return NextResponse.json(savedTask);
+
     } catch (error) {
         return NextResponse.json({
             error: "Error al crear la tarea"

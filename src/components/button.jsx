@@ -6,7 +6,7 @@ export const ButtonTodo = ({ type, children }) => {
   const router = useRouter();
 
   const handleClickCreateTask = () => {
-    router.push("/create");
+    router.push("/dashboard/create");
   };
 
   const handleDeleteAllTodos = () => {

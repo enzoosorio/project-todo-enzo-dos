@@ -2,6 +2,8 @@
 
 import React from "react";
 import { redirect } from "next/navigation";
+import { arimo } from "@/utils/fonts";
+import { useForm } from "react-hook-form";
 
 const CreatePage = () => {
   const handleFormSubmit = async (e) => {
@@ -10,6 +12,8 @@ const CreatePage = () => {
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
       console.log(data);
+
+      // taskSchema.parse(data);
 
       const res = await fetch("/api/task", {
         method: "POST",
@@ -21,9 +25,9 @@ const CreatePage = () => {
 
       const finalData = await res.json();
       console.log(finalData);
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     } catch (error) {
-      console.log(error);
+      console.log(error.errors);
     }
   };
 
@@ -38,7 +42,7 @@ const CreatePage = () => {
           <label className="text-lg">
             Titulo
             <input
-              className="block w-48 text-black"
+              className={`block w-48 text-slate-900 rounded-md py-1 px-2  ${arimo.className}`}
               type="text"
               required
               maxLength={35}
@@ -48,7 +52,7 @@ const CreatePage = () => {
           <label className="text-lg">
             Descripcion
             <input
-              className="block w-48 text-black"
+              className={`block w-48 text-slate-900 rounded-md py-1 px-2  ${arimo.className}`}
               type="text"
               required
               maxLength={250}
@@ -60,7 +64,7 @@ const CreatePage = () => {
           <label className="text-lg">
             Desde
             <input
-              className="block w-48 text-black"
+              className={`block w-48 text-slate-900 rounded-md py-1 px-2  ${arimo.className}`}
               type="date"
               required
               name="from"
@@ -69,7 +73,7 @@ const CreatePage = () => {
           <label className="text-lg">
             Hasta
             <input
-              className="block w-48 text-black"
+              className={`block w-48 text-slate-900 rounded-md py-1 px-2  ${arimo.className}`}
               type="date"
               required
               name="to"

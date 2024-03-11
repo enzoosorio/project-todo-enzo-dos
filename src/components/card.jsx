@@ -11,6 +11,15 @@ export const CardTodo = async ({ dataTasks }) => {
   const router = useRouter();
 
   useEffect(() => {
+    const handleScroll = () => {
+      localStorage.setItem("scrollPosition", window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
     const handleClick = (event) => {
       if (
         menuVisible &&
@@ -37,14 +46,24 @@ export const CardTodo = async ({ dataTasks }) => {
 
   const handleEdit = () => {
     if (selectedTaskId) {
-      router.push(`/create/edit?id=${selectedTaskId}`);
+      router.push(`/dashboard/create/edit?id=${selectedTaskId}`);
     }
   };
 
-  const handleDelete = () => {
-    if (selectedTaskId) {
-      router.push(`/delete/${selectedTaskId}`);
-    }
+  const handleDelete = async () => {
+    const resultDeletedTask = await fetch(`/api/task/${selectedTaskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    router.refresh();
+    console.log(resultDeletedTask);
+    setMenuVisible(false);
+  };
+
+  const handleRegresar = () => {
+    router.push("/");
   };
 
   return (
@@ -65,8 +84,8 @@ export const CardTodo = async ({ dataTasks }) => {
               </p>
             </div>
             <div className="mb-1 flex justify-between w-full">
-              <p>Desde: {task.from.toLocaleDateString()}</p>
-              <p>Hasta: {task.to.toLocaleDateString()}</p>
+              <p>Desde: {task.from.toISOString().split("T")[0]}</p>
+              <p>Hasta: {task.to.toISOString().split("T")[0]}</p>
             </div>
           </div>
         ))}
@@ -84,12 +103,14 @@ export const CardTodo = async ({ dataTasks }) => {
           </button>
           <button
             className="hover:font-bold hover:bg-slate-800 transition-all"
-            onClick={handleDelete}
+            onClick={selectedTaskId ? handleDelete : ""}
           >
             Eliminar
           </button>
         </div>
       )}
+
+      <button onClick={handleRegresar}>Regresar</button>
     </>
   );
 };
